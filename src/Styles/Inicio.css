@@ -1,0 +1,37 @@
+.seccion {
+  margin-top: 32px;
+}
+
+.seccion__titulo {
+  margin: 0 0 16px;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight: 700;
+}
+
+.seccion--categorias .seccion__titulo {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.grid-piezas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  padding: 0 16px;
+}
+
+.grid-categorias {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .grid-piezas     { grid-template-columns: repeat(2, 1fr); padding: 0; }
+  .grid-categorias { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .grid-piezas     { grid-template-columns: 1fr; }
+  .grid-categorias { grid-template-columns: repeat(2, 1fr); }
+}

@@ -1,0 +1,128 @@
+.hero {
+  position: relative;
+  background: var(--color-gris-claro);
+  border-radius: 4px;
+  padding: 24px 64px 16px;
+}
+
+.hero__slide {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 48px;
+  align-items: center;
+  min-height: 280px;
+  animation: hero-entrada 0.4s ease;
+}
+
+@keyframes hero-entrada {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.hero__titulo {
+  margin: 0 0 16px;
+  max-width: 14ch;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.hero__subtitulo {
+  margin: 0 0 28px;
+  max-width: 36ch;
+  color: var(--color-texto-suave);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hero__boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 26px;
+  border-radius: var(--radio);
+  background: var(--color-primario);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.hero__boton:hover {
+  background: #000;
+}
+
+.hero__media {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hero__imagen {
+  aspect-ratio: 16 / 11;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hero__puntos {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.hero__punto {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-gris-medio);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.hero__punto--activo {
+  background: var(--color-texto-suave);
+  transform: scale(1.2);
+}
+
+.hero__flecha {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-texto);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.hero__flecha:hover {
+  opacity: 0.75;
+}
+
+.hero__flecha--izq { left: 16px; }
+.hero__flecha--der { right: 16px; }
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 20px 44px 16px;
+  }
+
+  .hero__slide {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .hero__media {
+    order: -1;
+  }
+
+  .hero__flecha--izq { left: 8px; }
+  .hero__flecha--der { right: 8px; }
+}

@@ -1,11 +1,30 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Header from './components/Header'
+import Inicio from './pages/Inicio'
 
 function App() {
-    return <h1>Hello, Vite + React!</h1>
+  const [carrito, setCarrito] = useState([])
+
+  const agregarAlCarrito = (pieza) => {
+    setCarrito((actual) => [...actual, pieza])
+  }
+
+  return (
+    <BrowserRouter>
+      <Header totalCarrito={carrito.length} />
+      <main className="main">
+        <Routes>
+          <Route path="/" element={<Inicio onAgregar={agregarAlCarrito} />} />
+          {/* Aquí irán las otras páginas, por ejemplo:
+          <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/categorias" element={<Categorias />} />
+          <Route path="/marcas" element={<Marcas />} />
+          <Route path="/login" element={<Login />} /> */}
+        </Routes>
+      </main>
+    </BrowserRouter>
+  )
 }
 
 export default App
