@@ -1,6 +1,6 @@
 import ImagePlaceholder from './ImagePlaceholder'
 import { CartAddIcon } from './Icons'
-import '../styles/ProductCard.css'
+import '../Styles/ProductCard.css'
 
 const formatoPrecio = new Intl.NumberFormat('es-MX', {
   style: 'currency',

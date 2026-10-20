@@ -1,0 +1,424 @@
+.migas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+.migas a:hover {
+  text-decoration: underline;
+}
+
+.migas span {
+  color: #222;
+}
+
+.pagina-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagina-titulo {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.pagina-descripcion {
+  margin: 4px 0 0;
+  color: #555;
+  font-size: 15px;
+}
+
+/* ---------- Filtros ---------- */
+.filtros {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  align-items: end;
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+
+.filtros__buscar {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid var(--admin-borde);
+  border-radius: 4px;
+  background: #fff;
+  color: #555;
+}
+
+.filtros__buscar:focus-within {
+  border-color: var(--admin-oscuro);
+}
+
+.filtros__buscar input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+}
+
+.campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #333;
+  font-size: 13px;
+}
+
+/* ---------- Tabla ---------- */
+.tabla-contenedor {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid var(--admin-borde);
+  border-radius: 4px;
+}
+
+.tabla {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabla th {
+  padding: 14px 12px;
+  background: #ececec;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tabla td {
+  padding: 10px 12px;
+  border-top: 1px solid #e3e3e3;
+  color: #444;
+  vertical-align: middle;
+}
+
+.tabla tbody tr:hover {
+  background: #fafafa;
+}
+
+.tabla .num { text-align: right; }
+.tabla .centro { text-align: center; }
+
+.tabla__sku {
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 12px;
+}
+
+.tabla__vacia {
+  padding: 40px 12px !important;
+  text-align: center;
+  color: #777;
+}
+
+.miniatura {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #d6d6d6;
+  color: #888;
+}
+
+.miniatura img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.etiqueta {
+  display: inline-block;
+  min-width: 42px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: #e8e8e8;
+  color: #555;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.etiqueta--si {
+  background: #d2d2d2;
+  color: #222;
+  font-weight: 600;
+}
+
+.stock--bajo {
+  color: var(--peligro);
+  font-weight: 600;
+}
+
+.acciones {
+  display: inline-flex;
+  gap: 8px;
+}
+
+/* ---------- Pie y paginación ---------- */
+.tabla-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+  color: #555;
+  font-size: 14px;
+}
+
+.tabla-pie p {
+  margin: 0;
+}
+
+.paginacion {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--admin-borde);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.paginacion button {
+  min-width: 36px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-left: 1px solid var(--admin-borde);
+  background: #fff;
+  font-size: 13px;
+}
+
+.paginacion button:first-child {
+  border-left: 0;
+}
+
+.paginacion button:hover:not(:disabled):not(.activo) {
+  background: #f0f0f0;
+}
+
+.paginacion button.activo {
+  background: var(--admin-oscuro);
+  color: #fff;
+}
+
+.paginacion button:disabled {
+  color: #bbb;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .filtros {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filtros__buscar {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .filtros {
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-encabezado .btn {
+    width: 100%;
+  }
+}
+/* =========================================================
+   AJUSTES RESPONSIVOS
+   ========================================================= */
+
+.tabla {
+  min-width: 760px;
+}
+
+.tabla__sku {
+  white-space: nowrap;
+}
+
+.col-nombre {
+  min-width: 180px;
+}
+
+/* ---------- Pantallas grandes (1440p, 4K, monitores anchos) ---------- */
+@media (min-width: 1600px) {
+  .pagina-titulo {
+    font-size: 32px;
+  }
+
+  .pagina-descripcion {
+    font-size: 16px;
+  }
+
+  .tabla {
+    font-size: 14px;
+  }
+
+  .tabla th {
+    padding: 16px 18px;
+  }
+
+  .tabla td {
+    padding: 12px 18px;
+  }
+
+  .tabla__sku {
+    font-size: 13px;
+  }
+
+  .miniatura {
+    width: 68px;
+    height: 68px;
+  }
+
+  .btn-icono {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ---------- Tablets y teléfonos: la tabla se convierte en tarjetas ---------- */
+@media (max-width: 900px) {
+  .pagina-titulo {
+    font-size: 24px;
+  }
+
+  .tabla-contenedor {
+    overflow: visible;
+    background: none;
+    border: 0;
+  }
+
+  .tabla {
+    min-width: 0;
+  }
+
+  .tabla thead {
+    display: none;
+  }
+
+  .tabla,
+  .tabla tbody {
+    display: block;
+  }
+
+  .tabla tbody tr {
+    display: grid;
+    grid-template-columns: 64px 1fr 1fr;
+    grid-template-areas:
+      'img      nombre    nombre'
+      'img      sku       sku'
+      'img      marca     categoria'
+      'precio   precio    stock'
+      'destacada destacada acciones';
+    column-gap: 12px;
+    row-gap: 4px;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--admin-borde);
+    border-radius: 6px;
+  }
+
+  .tabla tbody tr:hover {
+    background: #fff;
+  }
+
+  .tabla td {
+    padding: 0;
+    border: 0;
+    text-align: left !important;
+    min-width: 0;
+  }
+
+  .tabla td[data-label]::before {
+    content: attr(data-label) ': ';
+    color: #888;
+  }
+
+  .col-img       { grid-area: img; }
+  .col-nombre    { grid-area: nombre; font-weight: 700; font-size: 14px; color: #222 !important; }
+  .col-sku       { grid-area: sku; }
+  .col-marca     { grid-area: marca; font-size: 12px; }
+  .col-categoria { grid-area: categoria; font-size: 12px; }
+
+  .col-precio,
+  .col-stock {
+    margin-top: 8px;
+    padding-top: 8px !important;
+    border-top: 1px solid #eee !important;
+  }
+
+  .col-precio    { grid-area: precio; font-size: 16px; font-weight: 700; color: #111 !important; }
+  .col-stock     { grid-area: stock; align-self: end; }
+  .tabla td.col-stock { text-align: right !important; }
+  .col-destacada { grid-area: destacada; align-self: center; }
+  .col-acciones  { grid-area: acciones; justify-self: end; }
+
+  .miniatura {
+    width: 64px;
+    height: 64px;
+  }
+
+  .btn-icono {
+    width: 40px;
+    height: 40px;
+  }
+
+  .tabla__vacia {
+    grid-column: 1 / -1;
+    background: #fff;
+  }
+
+  .tabla-pie {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .paginacion {
+    align-self: center;
+  }
+}
+
+/* Tablets: tarjetas en dos columnas */
+@media (min-width: 641px) and (max-width: 900px) {
+  .tabla tbody {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .tabla tbody tr {
+    margin-bottom: 0;
+  }
+
+  .tabla-pie {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+}

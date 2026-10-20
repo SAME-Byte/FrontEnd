@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import ImagePlaceholder from './ImagePlaceholder'
-import '../styles/CategoryCard.css'
+import '../Styles/CategoryCard.css'
 
 function CategoryCard({ categoria }) {
   return (

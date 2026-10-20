@@ -1,5 +1,5 @@
 import { ImageIcon } from './Icons'
-import '../styles/ImagePlaceholder.css'
+import '../Styles/ImagePlaceholder.css'
 
 function ImagePlaceholder({ src, alt = '' }) {
   if (src) {

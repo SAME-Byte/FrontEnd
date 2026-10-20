@@ -58,3 +58,9 @@ button {
     padding: 0 16px 40px;
   }
 }
+/* Pantallas grandes: el contenido de la tienda usa más ancho */
+@media (min-width: 1600px) {
+  :root {
+    --ancho-max: 1400px;
+  }
+}

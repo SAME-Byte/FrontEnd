@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { SearchIcon, UserIcon, CartIcon } from './Icons'
-import '../styles/Header.css'
+import '../Styles/Header.css'
 
 const enlaces = [
   { ruta: '/', texto: 'Inicio' },

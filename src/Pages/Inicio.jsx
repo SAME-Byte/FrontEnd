@@ -2,7 +2,7 @@ import HeroCarousel from '../components/HeroCarousel'
 import ProductCard from '../components/ProductCard'
 import CategoryCard from '../components/CategoryCard'
 import { slides, piezasDestacadas, categorias } from '../data/inicio'
-import '../styles/Inicio.css'
+import '../Styles/Inicio.css'
 
 function Inicio({ onAgregar }) {
   return (

@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
-import Inicio from './pages/Inicio'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import PublicLayout from './layouts/PublicLayout'
+import AdminLayout from './layouts/AdminLayout'
+import Inicio from './Pages/Inicio'
+import AdminPiezas from './Pages/admin/AdminPiezas'
 
 function App() {
   const [carrito, setCarrito] = useState([])
@@ -12,17 +14,20 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header totalCarrito={carrito.length} />
-      <main className="main">
-        <Routes>
+      <Routes>
+        {/* Tienda (con Header) */}
+        <Route element={<PublicLayout totalCarrito={carrito.length} />}>
           <Route path="/" element={<Inicio onAgregar={agregarAlCarrito} />} />
-          {/* Aquí irán las otras páginas, por ejemplo:
-          <Route path="/catalogo" element={<Catalogo />} />
-          <Route path="/categorias" element={<Categorias />} />
-          <Route path="/marcas" element={<Marcas />} />
-          <Route path="/login" element={<Login />} /> */}
-        </Routes>
-      </main>
+          {/* <Route path="/catalogo" element={<Catalogo />} /> ... */}
+        </Route>
+
+        {/* Panel de administración (con Sidebar) */}
+        <Route path="/admin" element={<AdminLayout />}>
+          {/* Mientras no exista el Dashboard, /admin manda a Piezas */}
+          <Route index element={<Navigate to="piezas" replace />} />
+          <Route path="piezas" element={<AdminPiezas />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   )
 }

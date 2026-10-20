@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import ImagePlaceholder from './ImagePlaceholder'
 import { ArrowLeftIcon, ArrowRightIcon } from './Icons'
-import '../styles/HeroCarousel.css'
+import '../Styles/HeroCarousel.css'
 
 function HeroCarousel({ slides, intervalo = 6000 }) {
   const [actual, setActual] = useState(0)
