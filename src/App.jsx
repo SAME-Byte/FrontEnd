@@ -4,6 +4,7 @@ import PublicLayout from './layouts/PublicLayout'
 import AdminLayout from './layouts/AdminLayout'
 import Inicio from './Pages/Inicio'
 import AdminPiezas from './Pages/admin/AdminPiezas'
+import Catalogo from './Pages/Catalogo'
 
 function App() {
   const [carrito, setCarrito] = useState([])
@@ -18,6 +19,7 @@ function App() {
         {/* Tienda (con Header) */}
         <Route element={<PublicLayout totalCarrito={carrito.length} />}>
           <Route path="/" element={<Inicio onAgregar={agregarAlCarrito} />} />
+          <Route path="/catalogo" element={<Catalogo onAgregar={agregarAlCarrito} />} />
           {/* <Route path="/catalogo" element={<Catalogo />} /> ... */}
         </Route>
 
