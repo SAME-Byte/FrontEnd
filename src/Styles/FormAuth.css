@@ -1,0 +1,154 @@
+.form-auth {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---------- Campo con ícono ---------- */
+.campo-auth {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-auth__etiqueta {
+  color: var(--color-texto);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.campo-auth__control {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo-auth__control:focus-within {
+  border-color: var(--color-texto);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+.campo-auth__control--error {
+  border-color: #c0392b;
+}
+
+.campo-auth__icono {
+  display: flex;
+  padding: 0 2px 0 12px;
+  color: var(--color-texto-suave);
+}
+
+.campo-auth__control input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 12px 0 8px;
+  border: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+}
+
+.campo-auth__control input::placeholder {
+  color: #9a9a9a;
+}
+
+.campo-auth__ojo {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--color-texto-suave);
+}
+
+.campo-auth__ojo:hover {
+  color: var(--color-texto);
+}
+
+.campo-auth__error {
+  margin: 0;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.campo-auth__ayuda {
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 12px;
+}
+
+/* ---------- Recordarme / Olvidé mi contraseña ---------- */
+.form-auth__fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.form-auth__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.form-auth__check input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-primario);
+}
+
+/* Estático: solo subrayado, sin cursor de enlace */
+.form-auth__olvide {
+  color: var(--color-texto);
+  text-decoration: underline;
+  cursor: default;
+}
+
+/* ---------- Botón principal ---------- */
+.form-auth__enviar {
+  height: 46px;
+  border: 0;
+  border-radius: var(--radio);
+  background: var(--color-primario);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.form-auth__enviar:hover:not(:disabled) {
+  background: #000;
+}
+
+.form-auth__enviar:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* ---------- "¿No tienes una cuenta? Regístrate aquí" ---------- */
+.form-auth__cambio {
+  margin: 4px 0 0;
+  color: var(--color-texto-suave);
+  font-size: 14px;
+  text-align: center;
+}
+
+.form-auth__enlace {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-texto);
+  font-weight: 600;
+  text-decoration: underline;
+}
