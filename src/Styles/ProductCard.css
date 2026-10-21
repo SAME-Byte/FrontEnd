@@ -60,3 +60,12 @@
 .card-pieza__boton:hover {
   background: var(--color-gris-claro);
 }
+
+.card-pieza__imagen a {
+  display: block;
+  height: 100%;
+}
+
+.card-pieza__nombre a:hover {
+  text-decoration: underline;
+}

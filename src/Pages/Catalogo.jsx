@@ -168,7 +168,12 @@ function Catalogo({ onAgregar }) {
         ) : (
           <div className="catalogo__grid">
             {resultados.slice(0, visibles).map((pieza) => (
-              <ProductCard key={pieza.id} pieza={pieza} onAgregar={onAgregar} />
+              <ProductCard
+                key={pieza.id}
+                pieza={pieza}
+                onAgregar={onAgregar}
+                enlace={`/catalogo/${pieza.id}`}
+              />
             ))}
           </div>
         )}

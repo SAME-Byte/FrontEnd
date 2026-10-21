@@ -5,27 +5,30 @@ import AdminLayout from './layouts/AdminLayout'
 import Inicio from './Pages/Inicio'
 import AdminPiezas from './Pages/admin/AdminPiezas'
 import Catalogo from './Pages/Catalogo'
+import DetallePieza from './Pages/DetallePieza'
+import Login from './Pages/Login'
 
 function App() {
   const [carrito, setCarrito] = useState([])
 
-  const agregarAlCarrito = (pieza) => {
-    setCarrito((actual) => [...actual, pieza])
+  const agregarAlCarrito = (pieza, cantidad = 1) => {
+    setCarrito((actual) => [...actual, { ...pieza, cantidad }])
   }
+
+  // Total de piezas en el carrito (suma las cantidades de cada registro)
+  const totalCarrito = carrito.reduce((total, item) => total + item.cantidad, 0)
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* Tienda (con Header) */}
-        <Route element={<PublicLayout totalCarrito={carrito.length} />}>
+        <Route element={<PublicLayout totalCarrito={totalCarrito} />}>
           <Route path="/" element={<Inicio onAgregar={agregarAlCarrito} />} />
           <Route path="/catalogo" element={<Catalogo onAgregar={agregarAlCarrito} />} />
-          {/* <Route path="/catalogo" element={<Catalogo />} /> ... */}
+          <Route path="/catalogo/:id" element={<DetallePieza onAgregar={agregarAlCarrito} />} />
+          <Route path="/login" element={<Login />} />
         </Route>
 
-        {/* Panel de administración (con Sidebar) */}
         <Route path="/admin" element={<AdminLayout />}>
-          {/* Mientras no exista el Dashboard, /admin manda a Piezas */}
           <Route index element={<Navigate to="piezas" replace />} />
           <Route path="piezas" element={<AdminPiezas />} />
         </Route>

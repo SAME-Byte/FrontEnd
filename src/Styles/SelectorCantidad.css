@@ -1,0 +1,55 @@
+.cantidad {
+  display: inline-flex;
+  height: 44px;
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: #fff;
+}
+
+.cantidad button {
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  color: var(--color-texto);
+}
+
+.cantidad button:hover:not(:disabled) {
+  background: var(--color-gris-claro);
+}
+
+.cantidad button:disabled {
+  color: var(--color-gris-medio);
+  cursor: not-allowed;
+}
+
+.cantidad input {
+  width: 48px;
+  border: 0;
+  border-left: 1px solid var(--color-borde);
+  border-right: 1px solid var(--color-borde);
+  font: inherit;
+  font-size: 15px;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Quitar las flechas nativas del campo numérico */
+.cantidad input::-webkit-outer-spin-button,
+.cantidad input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.cantidad input:focus {
+  outline: 2px solid var(--color-acento);
+  outline-offset: -2px;
+}
+
+.cantidad--deshabilitado {
+  opacity: 0.5;
+}

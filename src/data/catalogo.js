@@ -16,9 +16,28 @@ export const marcasCatalogo = [
   'Injen', 'K&N', 'KW', 'MagnaFlow', 'Momo', 'Morimoto', 'Recaro', 'Seibon', 'Sparco', 'StopTech',
 ]
 
-// id, nombre, categoría, marca, precio (MXN), relevancia (0–100)
+const prefijosSku = {
+  turbos: 'TRB', escapes: 'ESC', admision: 'ADM', suspension: 'SUS', frenos: 'FRN',
+  rines: 'RIN', iluminacion: 'ILU', aerodinamica: 'AER', interiores: 'INT', electronica: 'ELE',
+}
+
+const tipos = {
+  turbos: 'Inducción forzada', escapes: 'Sistema de escape', admision: 'Admisión',
+  suspension: 'Suspensión', frenos: 'Frenos', rines: 'Rines', iluminacion: 'Iluminación',
+  aerodinamica: 'Aerodinámica', interiores: 'Interior', electronica: 'Electrónica',
+}
+
+export const marcasAutos = ['Nissan', 'Honda', 'Toyota', 'Mazda', 'Volkswagen', 'Ford', 'Chevrolet', 'Subaru']
+
 const p = (id, nombre, categoria, marca, precio, relevancia) => ({
-  id, nombre, categoria, marca, precio, relevancia, imagen: null,
+  id, nombre, categoria, marca, precio, relevancia,
+  sku: `${prefijosSku[categoria]}-${String(id).padStart(3, '0')}`,
+  tipo: tipos[categoria],
+  stock: (id * 7) % 23, // la pieza 23 sale "Agotado" para probar ese caso
+  descripcion: `${nombre} de ${marca}. Pieza diseñada para mejorar el desempeño y la apariencia de tu auto, fabricada con materiales de alta calidad e instalable con herramientas estándar. Incluye garantía del fabricante.`,
+  marcasCompatibles: [0, 1, 2, 3].map((k) => marcasAutos[(id + k * 3) % marcasAutos.length]),
+  imagenes: [],
+  imagen: null,
 })
 
 export const productosCatalogo = [
