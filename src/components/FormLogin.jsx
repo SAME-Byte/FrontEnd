@@ -1,26 +1,32 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import CampoTexto from './CampoTexto'
 import { MailIcon, LockIcon } from './AuthIcons'
+import { useAuth } from '../hooks/useAuth'
 import '../Styles/FormAuth.css'
 
 const FORMATO_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function FormLogin({ correoInicial = '', onIrARegistro }) {
   const navigate = useNavigate()
+  const ubicacion = useLocation()
+  const { iniciarSesion } = useAuth()
+
   const [correo, setCorreo] = useState(correoInicial)
   const [contrasena, setContrasena] = useState('')
   const [recordarme, setRecordarme] = useState(false)
   const [errores, setErrores] = useState({})
+  const [errorApi, setErrorApi] = useState('')
   const [enviando, setEnviando] = useState(false)
 
   // Al escribir en un campo, se borra su mensaje de error
   const conLimpieza = (campo, setter) => (valor) => {
     setter(valor)
+    setErrorApi('')
     if (errores[campo]) setErrores((e) => ({ ...e, [campo]: undefined }))
   }
 
-  const enviar = (e) => {
+  const enviar = async (e) => {
     e.preventDefault()
 
     const errs = {}
@@ -32,15 +38,27 @@ function FormLogin({ correoInicial = '', onIrARegistro }) {
     if (Object.keys(errs).length > 0) return
 
     setEnviando(true)
-    // TODO: aquí va la llamada al BackEnd, por ejemplo:
-    //   POST /api/auth/login  { correo, contrasena, recordarme }
-    // Por ahora solo se simula y se regresa a Inicio.
-    console.log('Login (simulado):', { correo: correo.trim(), recordarme })
-    setTimeout(() => navigate('/'), 800)
+    setErrorApi('')
+    try {
+      // POST /api/auth/login -> la API devuelve { token, usuario }
+      const usuario = await iniciarSesion(correo.trim(), contrasena, recordarme)
+
+      // Redirección según el rol que viene de la base de datos
+      if (usuario.rol === 'admin') {
+        navigate(ubicacion.state?.desde || '/admin/piezas', { replace: true })
+      } else {
+        navigate('/', { replace: true })
+      }
+    } catch (error) {
+      setErrorApi(error.message) // p. ej. "Correo o contraseña incorrectos."
+      setEnviando(false)
+    }
   }
 
   return (
     <form className="form-auth" onSubmit={enviar} noValidate>
+      {errorApi && <p className="form-auth__error" role="alert">{errorApi}</p>}
+
       <CampoTexto
         id="login-correo"
         etiqueta="Correo electrónico"

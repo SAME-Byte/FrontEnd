@@ -8,8 +8,9 @@ const formatoPrecio = new Intl.NumberFormat('es-MX', {
   currency: 'MXN',
 })
 
+// pieza = un objeto tal como lo devuelve la API: { id, nombre, fabricante, precio, imagenUrl, ... }
 function ProductCard({ pieza, onAgregar, enlace }) {
-  const imagen = <ImagePlaceholder src={pieza.imagen} alt={pieza.nombre} />
+  const imagen = <ImagePlaceholder src={pieza.imagenUrl} alt={pieza.nombre} />
 
   return (
     <article className="card-pieza">
@@ -24,12 +25,14 @@ function ProductCard({ pieza, onAgregar, enlace }) {
         <h3 className="card-pieza__nombre">
           {enlace ? <Link to={enlace}>{pieza.nombre}</Link> : pieza.nombre}
         </h3>
-        <p className="card-pieza__marca">{pieza.marca}</p>
+        <p className="card-pieza__marca">{pieza.fabricante}</p>
         <div className="card-pieza__pie">
           <span className="card-pieza__precio">{formatoPrecio.format(pieza.precio)}</span>
           <button
             className="card-pieza__boton"
             onClick={() => onAgregar?.(pieza)}
+            disabled={pieza.stock === 0}
+            title={pieza.stock === 0 ? 'Agotado' : undefined}
             aria-label={`Agregar ${pieza.nombre} al carrito`}
           >
             <CartAddIcon />

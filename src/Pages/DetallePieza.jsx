@@ -3,17 +3,26 @@ import { Link, useParams } from 'react-router-dom'
 import GaleriaPieza from '../components/GaleriaPieza'
 import SelectorCantidad from '../components/SelectorCantidad'
 import ImagePlaceholder from '../components/ImagePlaceholder'
+import { Cargando, MensajeError } from '../components/EstadoCarga'
 import { CartIcon, ChevronRightIcon } from '../components/Icons'
-import { productosCatalogo, categoriasCatalogo } from '../data/catalogo'
+import { useCarga } from '../hooks/useCarga'
+import { obtenerPieza } from '../services/piezas'
 import '../Styles/DetallePieza.css'
 
 const formatoPrecio = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' })
 
+// La "key" hace que al cambiar de pieza (/catalogo/1 -> /catalogo/2) todo se reinicie y se vuelva a pedir
 function DetallePieza({ onAgregar }) {
   const { id } = useParams()
-  const pieza = productosCatalogo.find((p) => String(p.id) === id)
+  return <CargaPieza key={id} id={id} onAgregar={onAgregar} />
+}
 
-  if (!pieza) {
+function CargaPieza({ id, onAgregar }) {
+  const { datos: pieza, cargando, error, recargar } = useCarga(() => obtenerPieza(id))
+
+  if (cargando) return <div className="detalle"><Cargando texto="Cargando pieza…" /></div>
+
+  if (error?.status === 404) {
     return (
       <div className="detalle-vacio">
         <h1>No encontramos esta pieza</h1>
@@ -23,8 +32,9 @@ function DetallePieza({ onAgregar }) {
     )
   }
 
-  // key: al pasar de una pieza a otra, la ficha se reinicia (cantidad en 1, primera imagen)
-  return <FichaPieza key={pieza.id} pieza={pieza} onAgregar={onAgregar} />
+  if (error) return <div className="detalle"><MensajeError error={error} onReintentar={recargar} /></div>
+
+  return <FichaPieza pieza={pieza} onAgregar={onAgregar} />
 }
 
 function FichaPieza({ pieza, onAgregar }) {
@@ -36,7 +46,6 @@ function FichaPieza({ pieza, onAgregar }) {
     window.scrollTo(0, 0)
   }, [])
 
-  const categoria = categoriasCatalogo.find((c) => c.slug === pieza.categoria)
   const disponible = pieza.stock > 0
 
   const agregar = () => {
@@ -46,9 +55,9 @@ function FichaPieza({ pieza, onAgregar }) {
   }
 
   const especificaciones = [
-    ['Fabricante', pieza.marca],
+    ['Fabricante', pieza.fabricante],
     ['SKU', pieza.sku],
-    ['Tipo', pieza.tipo],
+    ['Categoría', pieza.categoria.nombre],
   ]
 
   return (
@@ -58,18 +67,18 @@ function FichaPieza({ pieza, onAgregar }) {
         <ChevronRightIcon />
         <Link to="/catalogo">Catálogo</Link>
         <ChevronRightIcon />
-        <span>{categoria?.nombre}</span>
+        <Link to={`/catalogo?categoria=${pieza.categoria.id}`}>{pieza.categoria.nombre}</Link>
         <ChevronRightIcon />
         <span aria-current="page">{pieza.nombre}</span>
       </nav>
 
       <div className="detalle__principal">
-        <GaleriaPieza imagenes={pieza.imagenes} nombre={pieza.nombre} />
+        <GaleriaPieza imagenes={pieza.imagenUrl ? [pieza.imagenUrl] : []} nombre={pieza.nombre} />
 
         <div className="detalle__info">
           <h1 className="detalle__nombre">{pieza.nombre}</h1>
           <p className="detalle__meta">
-            <span>{pieza.marca}</span>
+            <span>{pieza.fabricante}</span>
             <span className="detalle__separador" aria-hidden="true">|</span>
             <span>SKU: {pieza.sku}</span>
           </p>
@@ -131,16 +140,20 @@ function FichaPieza({ pieza, onAgregar }) {
 
         <section className="detalle__compatibles">
           <h2>Marcas compatibles</h2>
-          <ul className="compatibles">
-            {pieza.marcasCompatibles.map((marca) => (
-              <li key={marca} className="compatibles__item">
-                <div className="compatibles__logo">
-                  <ImagePlaceholder alt={`Logo de ${marca}`} />
-                </div>
-                <span>{marca}</span>
-              </li>
-            ))}
-          </ul>
+          {pieza.marcasCompatibles.length === 0 ? (
+            <p className="detalle__sin-datos">Sin marcas compatibles registradas.</p>
+          ) : (
+            <ul className="compatibles">
+              {pieza.marcasCompatibles.map((marca) => (
+                <li key={marca.id} className="compatibles__item">
+                  <div className="compatibles__logo">
+                    <ImagePlaceholder src={marca.logoUrl} alt={`Logo de ${marca.nombre}`} />
+                  </div>
+                  <span>{marca.nombre}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       </div>
     </article>

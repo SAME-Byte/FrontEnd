@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { IconChevronDown } from './AdminIcons'
 
+// opciones = [{ valor, texto }]  ·  seleccion = arreglo de "valor" elegidos
 function MultiSelect({ id, opciones, seleccion, onCambiar, placeholder, invalido }) {
   const [abierto, setAbierto] = useState(false)
   const ref = useRef(null)
@@ -23,12 +24,13 @@ function MultiSelect({ id, opciones, seleccion, onCambiar, placeholder, invalido
     )
   }
 
+  const nombres = opciones.filter((o) => seleccion.includes(o.valor)).map((o) => o.texto)
   const texto =
-    seleccion.length === 0
+    nombres.length === 0
       ? placeholder
-      : seleccion.length <= 2
-        ? seleccion.join(', ')
-        : `${seleccion.length} marcas seleccionadas`
+      : nombres.length <= 2
+        ? nombres.join(', ')
+        : `${nombres.length} marcas seleccionadas`
 
   return (
     <div className="multiselect" ref={ref}>
@@ -47,14 +49,14 @@ function MultiSelect({ id, opciones, seleccion, onCambiar, placeholder, invalido
       {abierto && (
         <ul className="multiselect__lista" role="listbox" aria-multiselectable="true">
           {opciones.map((opcion) => (
-            <li key={opcion}>
+            <li key={opcion.valor}>
               <label className="multiselect__opcion">
                 <input
                   type="checkbox"
-                  checked={seleccion.includes(opcion)}
-                  onChange={() => alternar(opcion)}
+                  checked={seleccion.includes(opcion.valor)}
+                  onChange={() => alternar(opcion.valor)}
                 />
-                {opcion}
+                {opcion.texto}
               </label>
             </li>
           ))}

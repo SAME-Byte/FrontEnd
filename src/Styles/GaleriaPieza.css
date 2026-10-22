@@ -62,3 +62,7 @@
     aspect-ratio: 4 / 3;
   }
 }
+/* Una sola imagen: ocupa todo el ancho, sin columna de miniaturas */
+.galeria--unica {
+  grid-template-columns: 1fr;
+}

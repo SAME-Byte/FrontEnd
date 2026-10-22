@@ -1,34 +1,50 @@
 import { useEffect, useRef, useState } from 'react'
 import MultiSelect from './MultiSelect'
 import { IconClose, IconChevronDown, IconImage } from './AdminIcons'
-import { categoriasAdmin, fabricantes, marcasAutos } from '../../data/piezasAdmin'
 import '../../Styles/admin/PiezaDrawer.css'
 
 const formularioVacio = {
-  sku: '', nombre: '', descripcion: '', marca: '', precio: '', stock: '',
-  imagen: '', destacada: false, categoria: '', marcasCompatibles: [],
+  sku: '', nombre: '', descripcion: '', fabricante: '', precio: '', stock: '',
+  imagenUrl: '', destacada: false, categoriaId: '', marcasCompatibles: [],
 }
+
+// Convierte una pieza de la API a los valores del formulario (los inputs trabajan con texto)
+const aFormulario = (p) => ({
+  sku: p.sku,
+  nombre: p.nombre,
+  descripcion: p.descripcion,
+  fabricante: p.fabricante,
+  precio: String(p.precio),
+  stock: String(p.stock),
+  imagenUrl: p.imagenUrl ?? '',
+  destacada: p.destacada,
+  categoriaId: String(p.categoria.id),
+  marcasCompatibles: p.marcasCompatibles.map((m) => m.id),
+})
 
 function validar(f) {
   const e = {}
   if (!f.sku.trim()) e.sku = 'El SKU es obligatorio.'
   if (!f.nombre.trim()) e.nombre = 'El nombre es obligatorio.'
   if (!f.descripcion.trim()) e.descripcion = 'Agrega una descripción.'
-  if (!f.marca) e.marca = 'Selecciona un fabricante.'
+  if (!f.fabricante.trim()) e.fabricante = 'Escribe el fabricante.'
   if (f.precio === '' || Number(f.precio) <= 0) e.precio = 'Ingresa un precio mayor a 0.'
   if (f.stock === '' || !Number.isInteger(Number(f.stock)) || Number(f.stock) < 0)
     e.stock = 'Ingresa una cantidad entera válida.'
-  if (!/^https?:\/\/.+/i.test(f.imagen.trim())) e.imagen = 'Ingresa una URL que empiece con http:// o https://'
-  if (!f.categoria) e.categoria = 'Selecciona una categoría.'
+  // La imagen es opcional: si se deja vacía, la tienda muestra el recuadro gris
+  if (f.imagenUrl.trim() && !/^https?:\/\/.+/i.test(f.imagenUrl.trim()))
+    e.imagenUrl = 'La URL debe empezar con http:// o https://'
+  if (!f.categoriaId) e.categoriaId = 'Selecciona una categoría.'
   if (f.marcasCompatibles.length === 0) e.marcasCompatibles = 'Selecciona al menos una marca.'
   return e
 }
 
-function Campo({ id, etiqueta, error, children }) {
+function Campo({ id, etiqueta, error, children, opcional = false }) {
   return (
     <div className="campo">
       <label htmlFor={id} className="campo__etiqueta">
-        {etiqueta} <span aria-hidden="true">*</span>
+        {etiqueta}{' '}
+        {opcional ? <span className="campo__opcional">(opcional)</span> : <span aria-hidden="true">*</span>}
       </label>
       {children}
       {error && <p className="campo__error">{error}</p>}
@@ -36,14 +52,12 @@ function Campo({ id, etiqueta, error, children }) {
   )
 }
 
-function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
+function PiezaDrawer({ pieza, categorias, marcas, fabricantes, onCerrar, onGuardar }) {
   const editando = Boolean(pieza)
-  const [form, setForm] = useState(() =>
-    pieza
-      ? { ...formularioVacio, ...pieza, precio: String(pieza.precio), stock: String(pieza.stock) }
-      : formularioVacio
-  )
+  const [form, setForm] = useState(() => (pieza ? aFormulario(pieza) : formularioVacio))
   const [errores, setErrores] = useState({})
+  const [guardando, setGuardando] = useState(false)
+  const [errorApi, setErrorApi] = useState('')
   const [imagenFallida, setImagenFallida] = useState('')
   const primerCampo = useRef(null)
 
@@ -67,25 +81,41 @@ function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
     if (errores[campo]) setErrores((e) => ({ ...e, [campo]: undefined }))
   }
 
-  const enviar = (e) => {
+  const enviar = async (e) => {
     e.preventDefault()
     const errs = validar(form)
     setErrores(errs)
     if (Object.keys(errs).length > 0) return
 
-    onGuardar({
-      ...form,
-      sku: form.sku.trim().toUpperCase(),
-      nombre: form.nombre.trim(),
-      descripcion: form.descripcion.trim(),
-      imagen: form.imagen.trim(),
-      precio: Number(form.precio),
-      stock: Number(form.stock),
-    })
+    setGuardando(true)
+    setErrorApi('')
+    try {
+      // Mismos nombres de campo que espera la API (POST/PUT /api/piezas)
+      await onGuardar({
+        sku: form.sku.trim().toUpperCase(),
+        nombre: form.nombre.trim(),
+        descripcion: form.descripcion.trim(),
+        fabricante: form.fabricante.trim(),
+        precio: Number(form.precio),
+        stock: Number(form.stock),
+        imagenUrl: form.imagenUrl.trim() || null,
+        destacada: form.destacada,
+        categoriaId: Number(form.categoriaId),
+        marcasCompatibles: form.marcasCompatibles,
+      })
+      // Si todo salió bien, el padre cierra el panel
+    } catch (error) {
+      setErrorApi(error.message)
+      // Errores por campo que mandó la API (por ejemplo "sku")
+      if (error.detalles) {
+        setErrores(Object.fromEntries(error.detalles.map((d) => [d.campo, d.mensaje])))
+      }
+      setGuardando(false)
+    }
   }
 
   const claseInput = (campo) => `input${errores[campo] ? ' input--error' : ''}`
-  const mostrarImagen = form.imagen.trim() && form.imagen !== imagenFallida
+  const mostrarImagen = form.imagenUrl.trim() && form.imagenUrl !== imagenFallida
 
   return (
     <div className="drawer-raiz">
@@ -103,6 +133,8 @@ function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
         </header>
 
         <form id="form-pieza" className="drawer__cuerpo" onSubmit={enviar} noValidate>
+          {errorApi && <p className="drawer__error" role="alert">{errorApi}</p>}
+
           <Campo id="sku" etiqueta="SKU" error={errores.sku}>
             <input
               ref={primerCampo} id="sku" className={claseInput('sku')} placeholder="Ej. BRK-001"
@@ -126,17 +158,16 @@ function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
           </Campo>
 
           <div className="drawer__fila">
-            <Campo id="marca" etiqueta="Fabricante / Marca" error={errores.marca}>
-              <div className={`select${form.marca ? '' : ' select--vacio'}`}>
-                <select
-                  id="marca" className={errores.marca ? 'input--error' : ''}
-                  value={form.marca} onChange={(e) => cambiar('marca', e.target.value)}
-                >
-                  <option value="" disabled>Selecciona un fabricante</option>
-                  {fabricantes.map((f) => <option key={f}>{f}</option>)}
-                </select>
-                <IconChevronDown size={16} />
-              </div>
+            <Campo id="fabricante" etiqueta="Fabricante" error={errores.fabricante}>
+              {/* Campo de texto que sugiere los fabricantes que ya existen */}
+              <input
+                id="fabricante" list="lista-fabricantes" className={claseInput('fabricante')}
+                placeholder="Ej. Garrett" autoComplete="off"
+                value={form.fabricante} onChange={(e) => cambiar('fabricante', e.target.value)}
+              />
+              <datalist id="lista-fabricantes">
+                {fabricantes.map((f) => <option key={f} value={f} />)}
+              </datalist>
             </Campo>
 
             <Campo id="precio" etiqueta="Precio" error={errores.precio}>
@@ -159,16 +190,16 @@ function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
             />
           </Campo>
 
-          <Campo id="imagen" etiqueta="URL de imagen" error={errores.imagen}>
+          <Campo id="imagenUrl" etiqueta="URL de imagen" error={errores.imagenUrl} opcional>
             <input
-              id="imagen" type="url" placeholder="https://..." className={claseInput('imagen')}
-              value={form.imagen} onChange={(e) => cambiar('imagen', e.target.value)}
+              id="imagenUrl" type="url" placeholder="https://..." className={claseInput('imagenUrl')}
+              value={form.imagenUrl} onChange={(e) => cambiar('imagenUrl', e.target.value)}
             />
             <div className="vista-previa">
               {mostrarImagen ? (
                 <img
-                  src={form.imagen} alt="Vista previa de la pieza"
-                  onError={() => setImagenFallida(form.imagen)}
+                  src={form.imagenUrl} alt="Vista previa de la pieza"
+                  onError={() => setImagenFallida(form.imagenUrl)}
                 />
               ) : (
                 <IconImage size={72} strokeWidth={1.4} />
@@ -189,14 +220,14 @@ function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
           </label>
 
           <div className="drawer__fila drawer__fila--mitades">
-            <Campo id="categoria" etiqueta="Categoría" error={errores.categoria}>
-              <div className={`select${form.categoria ? '' : ' select--vacio'}`}>
+            <Campo id="categoriaId" etiqueta="Categoría" error={errores.categoriaId}>
+              <div className={`select${form.categoriaId ? '' : ' select--vacio'}`}>
                 <select
-                  id="categoria" className={errores.categoria ? 'input--error' : ''}
-                  value={form.categoria} onChange={(e) => cambiar('categoria', e.target.value)}
+                  id="categoriaId" className={errores.categoriaId ? 'input--error' : ''}
+                  value={form.categoriaId} onChange={(e) => cambiar('categoriaId', e.target.value)}
                 >
                   <option value="" disabled>Selecciona una categoría</option>
-                  {categoriasAdmin.map((c) => <option key={c}>{c}</option>)}
+                  {categorias.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
                 </select>
                 <IconChevronDown size={16} />
               </div>
@@ -205,7 +236,7 @@ function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
             <Campo id="compatibles" etiqueta="Marcas compatibles" error={errores.marcasCompatibles}>
               <MultiSelect
                 id="compatibles"
-                opciones={marcasAutos}
+                opciones={marcas.map((m) => ({ valor: m.id, texto: m.nombre }))}
                 seleccion={form.marcasCompatibles}
                 onCambiar={(lista) => cambiar('marcasCompatibles', lista)}
                 placeholder="Selecciona una o más marcas"
@@ -219,8 +250,8 @@ function PiezaDrawer({ pieza, onCerrar, onGuardar }) {
           <button type="button" className="btn btn--secundario" onClick={onCerrar}>
             Cancelar
           </button>
-          <button type="submit" form="form-pieza" className="btn btn--primario">
-            Guardar pieza
+          <button type="submit" form="form-pieza" className="btn btn--primario" disabled={guardando}>
+            {guardando ? 'Guardando…' : 'Guardar pieza'}
           </button>
         </footer>
       </aside>

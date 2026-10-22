@@ -293,3 +293,8 @@
     width: 100%;
   }
 }
+.detalle__sin-datos {
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 14px;
+}

@@ -165,3 +165,37 @@
     gap: 24px;
   }
 }
+/* Usuario con sesión iniciada */
+.header__usuario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.header__nombre {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.header__enlace {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-texto-suave);
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.header__enlace:hover {
+  color: var(--color-texto);
+}
+
+@media (max-width: 768px) {
+  .header__nombre {
+    display: none;
+  }
+}

@@ -422,3 +422,34 @@
     text-align: left;
   }
 }
+
+/* Aviso después de guardar o eliminar */
+.admin-aviso {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  border-radius: 4px;
+  background: #e8f5ec;
+  color: #1e6b36;
+  font-size: 14px;
+}
+
+.admin-aviso button {
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.admin__contenido > .estado {
+  margin-top: 20px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

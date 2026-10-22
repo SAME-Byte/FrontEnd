@@ -69,3 +69,7 @@
 .card-pieza__nombre a:hover {
   text-decoration: underline;
 }
+.card-pieza__boton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

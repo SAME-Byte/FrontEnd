@@ -35,3 +35,28 @@
   .grid-piezas     { grid-template-columns: 1fr; }
   .grid-categorias { grid-template-columns: repeat(2, 1fr); }
 }
+.inicio__contenido > .estado {
+  margin-top: 32px;
+}
+
+.seccion__encabezado {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.seccion__encabezado .seccion__titulo {
+  margin: 0;
+}
+
+.seccion__ver-todo {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.seccion__ver-todo:hover {
+  text-decoration: underline;
+}

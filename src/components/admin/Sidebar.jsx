@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import {
   IconHome, IconBox, IconTag, IconCart, IconUsers, IconChart, IconLogout,
 } from './AdminIcons'
+import { useAuth } from '../../hooks/useAuth'
 
 const grupos = [
   [
@@ -19,6 +20,12 @@ const grupos = [
 
 function Sidebar({ abierto, onCerrar }) {
   const navigate = useNavigate()
+  const { cerrarSesion } = useAuth()
+
+  const salir = () => {
+    cerrarSesion()
+    navigate('/login')
+  }
 
   return (
     <aside className={`sidebar${abierto ? ' sidebar--abierto' : ''}`}>
@@ -46,7 +53,7 @@ function Sidebar({ abierto, onCerrar }) {
         ))}
       </nav>
 
-      <button className="sidebar__salir" onClick={() => navigate('/')}>
+      <button className="sidebar__salir" onClick={salir}>
         <IconLogout size={22} />
         <span>Cerrar sesión</span>
       </button>

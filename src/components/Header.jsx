@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { SearchIcon, UserIcon, CartIcon } from './Icons'
+import { useAuth } from '../hooks/useAuth'
 import '../Styles/Header.css'
 
 const enlaces = [
@@ -13,6 +14,7 @@ const enlaces = [
 function Header({ totalCarrito = 0 }) {
   const [busqueda, setBusqueda] = useState('')
   const navigate = useNavigate()
+  const { usuario, esAdmin, cerrarSesion } = useAuth()
 
   const buscar = (e) => {
     e.preventDefault()
@@ -42,10 +44,21 @@ function Header({ totalCarrito = 0 }) {
         </form>
 
         <div className="header__actions">
-          <Link to="/login" className="header__login">
-            <UserIcon />
-            <span>Iniciar Sesión</span>
-          </Link>
+          {usuario ? (
+            <div className="header__usuario">
+              <UserIcon />
+              <span className="header__nombre">{usuario.nombre}</span>
+              {esAdmin && <Link to="/admin/piezas" className="header__enlace">Panel</Link>}
+              <button type="button" className="header__enlace" onClick={cerrarSesion}>
+                Salir
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="header__login">
+              <UserIcon />
+              <span>Iniciar Sesión</span>
+            </Link>
+          )}
           <Link to="/carrito" className="header__cart" aria-label="Carrito de compras">
             <CartIcon />
             {totalCarrito > 0 && <span className="header__badge">{totalCarrito}</span>}

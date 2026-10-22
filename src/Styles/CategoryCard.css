@@ -33,3 +33,8 @@
   font-size: 14px;
   line-height: 1.25;
 }
+.card-categoria__cantidad {
+  margin-top: -8px;
+  color: var(--color-texto-suave);
+  font-size: 12px;
+}

@@ -36,8 +36,14 @@ function HeroCarousel({ slides, intervalo = 6000 }) {
         </div>
 
         <div className="hero__media">
-          <div className="hero__imagen">
-            <ImagePlaceholder src={slide.imagen} alt={slide.titulo} />
+          <div className={`hero__imagen${slide.collage ? ' hero__imagen--collage' : ''}`}>
+            {slide.collage ? (
+              slide.collage.map((src, i) => (
+                <ImagePlaceholder key={src} src={src} alt={i === 0 ? slide.titulo : ''} />
+              ))
+            ) : (
+              <ImagePlaceholder src={slide.imagen} alt={slide.titulo} />
+            )}
           </div>
           <div className="hero__puntos">
             {slides.map((s, i) => (

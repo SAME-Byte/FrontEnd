@@ -1,10 +1,18 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { IconMenu, IconSearch, IconUserCircle, IconChevronDown } from './AdminIcons'
+import { useAuth } from '../../hooks/useAuth'
 
 function AdminTopbar({ onMenu }) {
   const [menuAbierto, setMenuAbierto] = useState(false)
   const cerrarMenu = () => setMenuAbierto(false)
+  const { usuario, cerrarSesion } = useAuth()
+  const navigate = useNavigate()
+
+  const salir = () => {
+    cerrarSesion()
+    navigate('/login')
+  }
 
   return (
     <header className="topbar">
@@ -25,14 +33,15 @@ function AdminTopbar({ onMenu }) {
           aria-expanded={menuAbierto}
         >
           <IconUserCircle size={30} strokeWidth={1.6} />
-          <span>Admin</span>
+          <span>{usuario?.nombre}</span>
           <IconChevronDown size={16} />
         </button>
 
         {menuAbierto && (
           <ul className="topbar__dropdown" role="menu">
-            <li><button role="menuitem" onClick={cerrarMenu}>Mi perfil</button></li>
+            <li className="topbar__correo">{usuario?.email}</li>
             <li><Link role="menuitem" to="/" onClick={cerrarMenu}>Ir a la tienda</Link></li>
+            <li><button role="menuitem" onClick={salir}>Cerrar sesión</button></li>
           </ul>
         )}
       </div>

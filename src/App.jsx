@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import AuthProvider from './context/AuthProvider'
+import RutaProtegida from './components/RutaProtegida'
 import PublicLayout from './layouts/PublicLayout'
 import AdminLayout from './layouts/AdminLayout'
 import Inicio from './Pages/Inicio'
@@ -20,19 +22,30 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<PublicLayout totalCarrito={totalCarrito} />}>
-          <Route path="/" element={<Inicio onAgregar={agregarAlCarrito} />} />
-          <Route path="/catalogo" element={<Catalogo onAgregar={agregarAlCarrito} />} />
-          <Route path="/catalogo/:id" element={<DetallePieza onAgregar={agregarAlCarrito} />} />
-          <Route path="/login" element={<Login />} />
-        </Route>
+      {/* AuthProvider comparte la sesión (usuario y rol) con toda la app */}
+      <AuthProvider>
+        <Routes>
+          <Route element={<PublicLayout totalCarrito={totalCarrito} />}>
+            <Route path="/" element={<Inicio onAgregar={agregarAlCarrito} />} />
+            <Route path="/catalogo" element={<Catalogo onAgregar={agregarAlCarrito} />} />
+            <Route path="/catalogo/:id" element={<DetallePieza onAgregar={agregarAlCarrito} />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Navigate to="piezas" replace />} />
-          <Route path="piezas" element={<AdminPiezas />} />
-        </Route>
-      </Routes>
+          {/* Solo usuarios con rol "admin" pasan de RutaProtegida */}
+          <Route
+            path="/admin"
+            element={
+              <RutaProtegida>
+                <AdminLayout />
+              </RutaProtegida>
+            }
+          >
+            <Route index element={<Navigate to="piezas" replace />} />
+            <Route path="piezas" element={<AdminPiezas />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

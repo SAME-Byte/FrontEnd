@@ -2,7 +2,7 @@ import { IconImage, IconPencil, IconTrash } from './AdminIcons'
 
 const formatoPrecio = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' })
 
-function PiezasTable({ piezas, onEditar, onEliminar }) {
+function PiezasTable({ piezas, hayPiezas = true, onEditar, onEliminar }) {
   return (
     <div className="tabla-contenedor">
       <table className="tabla">
@@ -11,7 +11,7 @@ function PiezasTable({ piezas, onEditar, onEliminar }) {
             <th>Imagen</th>
             <th>SKU</th>
             <th>Nombre</th>
-            <th>Marca</th>
+            <th>Fabricante</th>
             <th>Categoría</th>
             <th className="num">Precio</th>
             <th className="centro">Stock</th>
@@ -23,7 +23,9 @@ function PiezasTable({ piezas, onEditar, onEliminar }) {
           {piezas.length === 0 ? (
             <tr>
               <td colSpan={9} className="tabla__vacia">
-                No se encontraron piezas con esos filtros.
+                {hayPiezas
+                  ? 'No se encontraron piezas con esos filtros.'
+                  : 'Aún no hay piezas registradas. Usa "Nueva pieza" para agregar la primera.'}
               </td>
             </tr>
           ) : (
@@ -32,9 +34,9 @@ function PiezasTable({ piezas, onEditar, onEliminar }) {
                 <td className="col-img">
                   <div className="miniatura">
                     <IconImage size={26} />
-                    {p.imagen && (
+                    {p.imagenUrl && (
                       <img
-                        src={p.imagen}
+                        src={p.imagenUrl}
                         alt={p.nombre}
                         loading="lazy"
                         onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -44,8 +46,8 @@ function PiezasTable({ piezas, onEditar, onEliminar }) {
                 </td>
                 <td className="col-sku tabla__sku">{p.sku}</td>
                 <td className="col-nombre">{p.nombre}</td>
-                <td className="col-marca" data-label="Marca">{p.marca}</td>
-                <td className="col-categoria" data-label="Categoría">{p.categoria}</td>
+                <td className="col-marca" data-label="Fabricante">{p.fabricante}</td>
+                <td className="col-categoria" data-label="Categoría">{p.categoria.nombre}</td>
                 <td className="col-precio num">{formatoPrecio.format(p.precio)}</td>
                 <td className="col-stock centro" data-label="Stock">
                   <span className={p.stock < 10 ? 'stock--bajo' : ''}>{p.stock}</span>

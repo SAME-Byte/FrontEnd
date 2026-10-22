@@ -64,6 +64,19 @@
   overflow: hidden;
 }
 
+/* Slide con varias fotos: cuadrícula de 2 x 2 */
+.hero__imagen--collage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 6px;
+}
+
+.hero__imagen--collage .img-real,
+.hero__imagen--collage .img-ph {
+  min-height: 0;
+}
+
 .hero__puntos {
   display: flex;
   justify-content: center;

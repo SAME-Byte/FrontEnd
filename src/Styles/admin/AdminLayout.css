@@ -373,3 +373,10 @@ textarea.input {
     padding: 16px;
   }
 }
+.topbar__correo {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--admin-borde);
+  margin-bottom: 4px;
+  color: #666;
+  font-size: 13px;
+}

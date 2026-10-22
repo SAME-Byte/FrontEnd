@@ -294,3 +294,19 @@
     padding-right: 18px;
   }
 }
+/* Error que devuelve la API (por ejemplo, SKU repetido) */
+.drawer__error {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid #e3b4ae;
+  border-radius: 4px;
+  background: #fdf3f2;
+  color: var(--peligro);
+  font-size: 14px;
+}
+
+.campo__opcional {
+  color: #888;
+  font-size: 12px;
+  font-weight: 400;
+}
